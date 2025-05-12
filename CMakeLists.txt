@@ -5,6 +5,8 @@ project(prayengine VERSION 0.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED True) # Optional, but recommended
 
+add_subdirectory(libs/common)
+
 include(FetchContent)
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
