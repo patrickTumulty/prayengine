@@ -9,7 +9,7 @@
 static void renderUpdate()
 {
     LList entities;
-    Rc rc = prayEntityLookupAll(&entities, C(CID(Sprite2DComponent)), 1);
+    Rc rc = prayEntityLookupAll(&entities, C(CID(Sprite2D)), 1);
     if (rc != RC_OK)
     {
         return;
@@ -19,8 +19,8 @@ static void renderUpdate()
     LListForEach(&entities, node)
     {
         Entity *entity = LListGetEntry(node, Entity);
-        auto sprite2d = getComponent(entity, Sprite2DComponent);
-        auto transform = getComponent(entity, Transform2DComponent);
+        auto sprite2d = getComponent(entity, Sprite2D);
+        auto transform = getComponent(entity, Transform2D);
 
         Vector2 position = {0, 0};
         float rotationDegrees = 0;
@@ -28,7 +28,7 @@ static void renderUpdate()
         if (transform != nullptr)
         {
             position = transform->position;
-            rotationDegrees = transform->rotationDegrees;
+            rotationDegrees = transform->rotation;
         }
 
         Rectangle source = sprite2d->source;
@@ -44,7 +44,7 @@ static void renderUpdate()
                        sprite2d->source,
                        (Rectangle) {position.x, position.y, source.width, source.height},
                        sprite2d->origin,
-                       rotationDegrees + sprite2d->rotationDegrees,
+                       rotationDegrees + sprite2d->rotation,
                        WHITE);
 
         if (sprite2d->shader != nullptr)

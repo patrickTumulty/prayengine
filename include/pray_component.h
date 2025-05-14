@@ -1,6 +1,6 @@
 
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#ifndef PRAY_COMPONENTS_H
+#define PRAY_COMPONENTS_H
 
 #include "common_types.h"
 #include "linked_list.h"
@@ -44,4 +44,4 @@ void prayComponentsDestroy();
 
 #define registerComponent(TYPE, INIT, DEINIT) prayComponentRegister(CID(TYPE), sizeof(TYPE), INIT, DEINIT)
 
-#endif // COMPONENTS_H
+#endif // PRAY_COMPONENTS_H

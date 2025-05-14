@@ -1,41 +1,39 @@
 
-#ifndef PRAY_COMPONENTS_H
-#define PRAY_COMPONENTS_H
+#ifndef PRAY_DEFAULT_COMPONENTS_H
+#define PRAY_DEFAULT_COMPONENTS_H
 
+#include "pray_component.h"
 #include "pray_entity.h"
 #include "raylib.h"
-#include "pray_component.h"
 
-#ifdef COMPONENT_OFFSET
 #undef COMPONENT_OFFSET
-#endif
 #define COMPONENT_OFFSET COMPONENT_BANK_DEFAULT
 
-typedef struct 
+typedef struct
 {
     Vector2 position;
-    float rotationDegrees; // 0.0 to 359.0
-} Transform2DComponent;
+    float rotation; // Degrees (0.0 to 359.0)
+} Transform2D;
 
-REGISTER_CID(Transform2DComponent);
+REGISTER_CID(Transform2D);
 
 constexpr char str[] = "Hello";
 
-struct Sprite2DComponent;
+struct Sprite2D;
 
-typedef void (*PreShaderCallback)(Entity *entity, struct Sprite2DComponent *sprite2D);
+typedef void (*PreShaderCallback)(Entity *entity, struct Sprite2D *sprite2D);
 
-typedef struct Sprite2DComponent
+typedef struct Sprite2D
 {
     Texture2D texture;
     Rectangle source;
     Vector2 origin;
-    float rotationDegrees; // degrees
+    float rotation; // degrees (0.0 to 359.0)
     Shader *shader;
     PreShaderCallback preShaderCallback;
-} Sprite2DComponent;
+} Sprite2D;
 
-REGISTER_CID(Sprite2DComponent);
+REGISTER_CID(Sprite2D);
 
 void prayRegisterDefaultComponents();
 

@@ -4,6 +4,6 @@
 
 void prayRegisterDefaultComponents()
 {
-    registerComponent(Transform2DComponent, nullptr, nullptr);
-    registerComponent(Sprite2DComponent, nullptr, nullptr);
+    registerComponent(Transform2D, nullptr, nullptr);
+    registerComponent(Sprite2D, nullptr, nullptr);
 }

@@ -75,7 +75,3 @@ void prayComponentsDestroy()
     }
 }
 
-cid nextCid()
-{
-
-}

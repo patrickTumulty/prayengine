@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 
-
 typedef struct
 {
     int x;
