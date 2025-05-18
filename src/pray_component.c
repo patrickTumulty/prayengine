@@ -1,14 +1,14 @@
 
 #include "pray_component.h"
+#include "common_type.h"
 #include "common_types.h"
 #include "linked_list.h"
 #include "tmem.h"
 #include <raylib.h>
 
-cid globalCidCounter;
 static LList componentsList;
 
-static ComponentInitializer *findComponentInitializer(cid componentID)
+static ComponentInitializer *findComponentInitializer(type_id componentID)
 {
     LNode *lnode = nullptr;
     LListForEach(&componentsList, lnode)
@@ -26,7 +26,7 @@ static ComponentInitializer *findComponentInitializer(cid componentID)
     return nullptr;
 }
 
-Rc prayComponentGetInitializer(cid componentID, ComponentInitializer *componentInitialzer)
+Rc prayComponentGetInitializer(type_id componentID, ComponentInitializer *componentInitialzer)
 {
     ComponentInitializer *compInitializer = findComponentInitializer(componentID);
     if (compInitializer == nullptr)
@@ -37,7 +37,7 @@ Rc prayComponentGetInitializer(cid componentID, ComponentInitializer *componentI
     return RC_OK;
 }
 
-Rc prayComponentRegister(cid componentID,
+Rc prayComponentRegister(type_id componentID,
                          u64 componentSize,
                          Consumer initCallback,
                          Consumer deinitCallback)

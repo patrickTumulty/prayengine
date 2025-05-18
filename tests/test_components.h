@@ -2,8 +2,8 @@
 #ifndef TEST_COMPONENTS_H
 #define TEST_COMPONENTS_H
 
+#include "common_type.h"
 #include "common_types.h"
-#include "pray_component.h"
 #include "raylib.h"
 
 #define COMPONENT_OFFSET COMPONENT_BANK_A
@@ -15,7 +15,7 @@ typedef struct
     char origin[20];
 } PlayerComponent;
 
-REGISTER_CID(PlayerComponent);
+DECLARE_TYPE(PlayerComponent);
 
 typedef struct
 {
@@ -24,14 +24,14 @@ typedef struct
     char origin[20];
 } EnemyComponent;
 
-REGISTER_CID(EnemyComponent);
+DECLARE_TYPE(EnemyComponent);
 
 typedef struct
 {
     Vector2 position;
 } TransformComponent;
 
-REGISTER_CID(TransformComponent);
+DECLARE_TYPE(TransformComponent);
 
 typedef struct
 {
@@ -39,7 +39,7 @@ typedef struct
     u32 maxHealth;
 } HealthComponent;
 
-REGISTER_CID(HealthComponent);
+DECLARE_TYPE(HealthComponent);
 
 typedef struct
 {
@@ -47,7 +47,7 @@ typedef struct
     u64 worldSize;
 } WorldComponent;
 
-REGISTER_CID(WorldComponent);
+DECLARE_TYPE(WorldComponent);
 
 void registerTestComponents();
 

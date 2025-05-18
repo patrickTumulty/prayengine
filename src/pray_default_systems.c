@@ -9,7 +9,7 @@
 static void renderUpdate()
 {
     LList entities;
-    Rc rc = prayEntityLookupAll(&entities, C(CID(Sprite2D)), 1);
+    Rc rc = prayEntityLookupAll(&entities, C(typeid(Sprite2D)), 1);
     if (rc != RC_OK)
     {
         return;

@@ -13,6 +13,7 @@ set(
     src/pointer_list.c
     src/tmem.c
     src/array_list.c
+    src/common_hash.c
     src/common_random.c
 )
 

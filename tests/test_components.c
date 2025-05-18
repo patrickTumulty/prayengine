@@ -1,5 +1,6 @@
 
 #include "test_components.h"
+#include "common_type.h"
 #include "common_types.h"
 #include "linked_list.h"
 #include "pray_component.h"
@@ -8,6 +9,12 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/TestRun.h>
 #include <stdio.h>
+
+DEFINE_TYPE(PlayerComponent);
+DEFINE_TYPE(TransformComponent);
+DEFINE_TYPE(HealthComponent);
+DEFINE_TYPE(WorldComponent);
+DEFINE_TYPE(EnemyComponent);
 
 void initPlayer(void *ptr)
 {
@@ -40,6 +47,7 @@ void registerTestComponents()
 {
     prayComponnentInitialize();
 
+
     registerComponent(PlayerComponent, initPlayer, nullptr);
     registerComponent(TransformComponent, nullptr, nullptr);
     registerComponent(HealthComponent, nullptr, nullptr);
@@ -68,31 +76,31 @@ void registerComponentTest()
     CU_ASSERT_EQUAL(rc, RC_OK);
 
     ComponentInitializer ci = {};
-    rc = prayComponentGetInitializer(CID(PlayerComponent), &ci);
+    rc = prayComponentGetInitializer(typeid(PlayerComponent), &ci);
     CU_ASSERT_EQUAL(rc, RC_OK);
-    CU_ASSERT_EQUAL(ci.id, CID(PlayerComponent));
+    CU_ASSERT_EQUAL(ci.id, typeid(PlayerComponent));
     CU_ASSERT_EQUAL(ci.size, sizeof(PlayerComponent));
     CU_ASSERT_PTR_NOT_NULL(ci.initialize);
     CU_ASSERT_PTR_EQUAL(ci.initialize, initPlayer);
     CU_ASSERT_PTR_NULL(ci.deinitialize);
 
-    rc = prayComponentGetInitializer(CID(TransformComponent), &ci);
+    rc = prayComponentGetInitializer(typeid(TransformComponent), &ci);
     CU_ASSERT_EQUAL(rc, RC_OK);
-    CU_ASSERT_EQUAL(ci.id, CID(TransformComponent));
+    CU_ASSERT_EQUAL(ci.id, typeid(TransformComponent));
     CU_ASSERT_EQUAL(ci.size, sizeof(TransformComponent));
     CU_ASSERT_PTR_NULL(ci.initialize);
     CU_ASSERT_PTR_NULL(ci.deinitialize);
 
-    rc = prayComponentGetInitializer(CID(HealthComponent), &ci);
+    rc = prayComponentGetInitializer(typeid(HealthComponent), &ci);
     CU_ASSERT_EQUAL(rc, RC_OK);
-    CU_ASSERT_EQUAL(ci.id, CID(HealthComponent));
+    CU_ASSERT_EQUAL(ci.id, typeid(HealthComponent));
     CU_ASSERT_EQUAL(ci.size, sizeof(HealthComponent));
     CU_ASSERT_PTR_NULL(ci.initialize);
     CU_ASSERT_PTR_NULL(ci.deinitialize);
 
-    rc = prayComponentGetInitializer(CID(WorldComponent), &ci);
+    rc = prayComponentGetInitializer(typeid(WorldComponent), &ci);
     CU_ASSERT_EQUAL(rc, RC_OK);
-    CU_ASSERT_EQUAL(ci.id, CID(WorldComponent));
+    CU_ASSERT_EQUAL(ci.id, typeid(WorldComponent));
     CU_ASSERT_EQUAL(ci.size, sizeof(WorldComponent));
     CU_ASSERT_PTR_NOT_NULL(ci.initialize);
     CU_ASSERT_PTR_EQUAL(ci.initialize, initWorld);
@@ -110,7 +118,7 @@ void initDeinitComponents()
     registerTestComponents();
 
     ComponentInitializer componentInitializer = {0};
-    Rc rc = prayComponentGetInitializer(CID(PlayerComponent), &componentInitializer);
+    Rc rc = prayComponentGetInitializer(typeid(PlayerComponent), &componentInitializer);
     CU_ASSERT_EQUAL_FATAL(rc, RC_OK);
 
     PlayerComponent *playerComponent = tmemcalloc(1, componentInitializer.size);
@@ -124,7 +132,7 @@ void initDeinitComponents()
 
     tmemfree(playerComponent);
 
-    rc = prayComponentGetInitializer(CID(WorldComponent), &componentInitializer);
+    rc = prayComponentGetInitializer(typeid(WorldComponent), &componentInitializer);
     CU_ASSERT_EQUAL_FATAL(rc, RC_OK);
 
     WorldComponent *worldComponent = tmemcalloc(1, componentInitializer.size);
@@ -152,9 +160,18 @@ void initDeinitComponents()
     CU_ASSERT_EQUAL(stats.current, 0);
 }
 
+static int initTests()
+{
+    REGISTER_TYPE(PlayerComponent);
+    REGISTER_TYPE(TransformComponent);
+    REGISTER_TYPE(HealthComponent);
+    REGISTER_TYPE(WorldComponent);
+    REGISTER_TYPE(EnemyComponent);
+}
+
 void registerComponentsTests()
 {
-    CU_pSuite suite = CU_add_suite("Pray Components Test", nullptr, nullptr);
+    CU_pSuite suite = CU_add_suite("Pray Components Test", initTests, nullptr);
     CU_add_test(suite, "Register Components", registerComponentTest);
     CU_add_test(suite, "Init/Deinit Components", initDeinitComponents);
 }

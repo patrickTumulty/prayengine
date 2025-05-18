@@ -3,11 +3,12 @@
 #define ENTITY_H
 
 #include "array_list.h"
+#include "common_type.h"
 #include "linked_list.h"
 
 typedef struct
 {
-    u32 componentID;
+    type_id componentID;
     void **ptr;
 } ComponentIDRef;
 
@@ -26,6 +27,6 @@ Entity *prayEntityFree(Entity *entity);
 void *prayEntityGetComponent(Entity *entity, u32 componentID);
 void prayEntityGetComponents(Entity *entity, ComponentIDRef *refMap, u32 refMapLen);
 
-#define getComponent(ENTITY, TYPE) (TYPE*) prayEntityGetComponent((ENTITY), CID(TYPE))
+#define getComponent(ENTITY, TYPE) (TYPE*) prayEntityGetComponent((ENTITY), typeid(TYPE))
 
 #endif // ENTITY_H
