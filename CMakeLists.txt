@@ -8,13 +8,23 @@ set(CMAKE_C_STANDARD_REQUIRED True) # Optional, but recommended
 add_subdirectory(libs/common)
 
 include(FetchContent)
+
+FetchContent_Declare(
+	box2d
+	GIT_REPOSITORY https://github.com/erincatto/box2d.git
+	GIT_TAG main
+	GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(box2d)
+
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
     message(NOTICE "Declare")
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
-        GIT_TAG 5.0
+        GIT_TAG 5.5
+        GIT_SHALLOW TRUE
     )
     FetchContent_GetProperties(raylib)
     if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
@@ -40,7 +50,7 @@ file(GLOB SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib common)
+target_link_libraries(${PROJECT_NAME} PUBLIC raylib common box2d)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(CUNIT REQUIRED cunit)
