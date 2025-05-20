@@ -34,3 +34,73 @@ bool prayVector2Equals(Vector2 v1, Vector2 v2)
 {
     return feq(v1.x, v2.x) && feq(v1.y, v2.y);
 }
+
+/**
+ * @brief Calculate distance between 2 vector2s 
+ *
+ * @param[[in]] p1 point 1 
+ * @param[[in]] p2 point 2 
+ *
+ * @return distance
+ */
+float prayVector2Distance(Vector2 p1, Vector2 p2)
+{
+    float deltaX = p2.x - p1.x;
+    float deltaY = p2.y - p1.y;
+    return sqrtf((deltaX * deltaX) + (deltaY * deltaY));
+}
+
+/**
+ * @brief calculate points for an equal lateral triangle 
+ *
+ * @param[[in]] origin center point 
+ * @param[[in]] roatationDegrees triangle rotation around origin 
+ * @param[[in]] radius radius 
+ */
+void prayCalcTriangle(Vector2 origin, float roatationDegrees, float radius, Vector2 points[3])
+{
+    points[0] = prayCalcPointOnCircle(origin, DEG2RAD * roatationDegrees, radius);
+    points[1] = prayCalcPointOnCircle(origin, DEG2RAD * (120 + roatationDegrees), radius);
+    points[2] = prayCalcPointOnCircle(origin, DEG2RAD * (240 + roatationDegrees), radius);
+}
+
+/**
+ * @brief Calculate angle between 2 points 
+ *
+ * @param[[in]] p1 point 1 
+ * @param[[in]] p2 point 2 
+ *
+ * @return angle in degrees
+ */
+float prayCalcAngle(Vector2 p1, Vector2 p2)
+{
+    float deltaX = p1.x - p2.x;
+    float deltaY = p1.y - p2.y;
+    return RAD2DEG * atan2f(deltaY, deltaX);
+}
+
+/**
+ * @brief calculate a point on a circle around a point 
+ *
+ * @param[[in]] origin origin point  
+ * @param[[in]] radians degrees in radians 
+ * @param[[in]] radius radius 
+ *
+ * @return point on circle 
+ */
+Vector2 prayCalcPointOnCircle(Vector2 origin, float radians, float radius)
+{
+    float x = radius * cosf(radians);
+    float y = radius * sinf(radians);
+    return (Vector2) {
+        .x = x + origin.x,
+        .y = y + origin.y,
+    };
+}
+
+float prayCalcSlope(Vector2 p1, Vector2 p2)
+{
+    float deltaX = p2.x - p1.x;
+    float deltaY = p2.y - p1.y;
+    return deltaX == 0 ? 1.0f : deltaY / deltaX;
+}
