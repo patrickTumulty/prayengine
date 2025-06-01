@@ -104,3 +104,23 @@ float prayCalcSlope(Vector2 p1, Vector2 p2)
     float deltaY = p2.y - p1.y;
     return deltaX == 0 ? 1.0f : deltaY / deltaX;
 }
+
+void prayDrawPolygon(const Vector2 *points, int pointsCount, Vector2 offset, Color color)
+{
+    Vector2 prev = points[0];
+    prev.x += offset.x;
+    prev.y += offset.y;
+    for (int i = 0; i < pointsCount; i++)
+    {
+        Vector2 p = points[i];
+        p.x += offset.x;
+        p.y += offset.y;
+        DrawLineEx(p, prev, 1, color);
+        prev = p;
+        DrawCircleV(p, 2, color);
+    }
+    Vector2 p = points[0];
+    p.x += offset.x;
+    p.y += offset.y;
+    DrawLineEx(prev, p, 1, color);
+}

@@ -14,5 +14,6 @@ void prayCalcTriangle(Vector2 origin, float roatationDegrees, float radius, Vect
 float prayCalcAngle(Vector2 p1, Vector2 p2);
 Vector2 prayCalcPointOnCircle(Vector2 origin, float radians, float radius);
 float prayCalcSlope(Vector2 p1, Vector2 p2);
+void prayDrawPolygon(const Vector2 *points, int pointsCount, Vector2 offset, Color color);
 
 #endif // PRAY_UTILS_H
