@@ -33,6 +33,7 @@ typedef struct Sprite2D
 
 DECLARE_TYPE(Sprite2D);
 
+void prayRenderSprite2D(Entity *entity);
 void prayRegisterDefaultComponents();
 
 #endif // PRAY_COMPONENTS_H

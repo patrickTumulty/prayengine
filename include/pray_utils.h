@@ -6,6 +6,11 @@
 
 #define VEC2_ZERO (Vector2){0, 0}
 
+typedef struct {
+    int x;
+    int y;
+} IntVector2;
+
 Vector2 prayVector2MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta);
 Vector2 prayVector2Add(Vector2 v1, Vector2 v2);
 float prayVector2Distance(Vector2 p1, Vector2 p2);

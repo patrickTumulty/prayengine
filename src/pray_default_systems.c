@@ -5,6 +5,43 @@
 #include "pray_entity.h"
 #include "pray_entity_registry.h"
 #include "pray_system.h"
+#include "raylib.h"
+
+void prayRenderSprite2D(Entity *entity)
+{
+    auto sprite2d = getComponent(entity, Sprite2D);
+    auto transform = getComponent(entity, Transform2D);
+
+    Vector2 position = {0, 0};
+    float rotationDegrees = 0;
+
+    if (transform != nullptr)
+    {
+        position = transform->position;
+        rotationDegrees = transform->rotation;
+    }
+
+    Rectangle source = sprite2d->source;
+
+    if (sprite2d->shader != nullptr)
+    {
+        BeginShaderMode(*sprite2d->shader);
+
+        sprite2d->preShaderCallback(entity, sprite2d);
+    }
+
+    DrawTexturePro(sprite2d->texture,
+                   sprite2d->source,
+                   (Rectangle) {position.x, position.y, source.width, source.height},
+                   sprite2d->origin,
+                   rotationDegrees + sprite2d->rotation,
+                   WHITE);
+
+    if (sprite2d->shader != nullptr)
+    {
+        EndShaderMode();
+    }
+}
 
 static void renderUpdate()
 {
@@ -19,38 +56,7 @@ static void renderUpdate()
     LListForEach(&entities, node)
     {
         Entity *entity = LListGetEntry(node, Entity);
-        auto sprite2d = getComponent(entity, Sprite2D);
-        auto transform = getComponent(entity, Transform2D);
-
-        Vector2 position = {0, 0};
-        float rotationDegrees = 0;
-
-        if (transform != nullptr)
-        {
-            position = transform->position;
-            rotationDegrees = transform->rotation;
-        }
-
-        Rectangle source = sprite2d->source;
-
-        if (sprite2d->shader != nullptr)
-        {
-            BeginShaderMode(*sprite2d->shader);
-
-            sprite2d->preShaderCallback(entity, sprite2d);
-        }
-
-        DrawTexturePro(sprite2d->texture,
-                       sprite2d->source,
-                       (Rectangle) {position.x, position.y, source.width, source.height},
-                       sprite2d->origin,
-                       rotationDegrees + sprite2d->rotation,
-                       WHITE);
-
-        if (sprite2d->shader != nullptr)
-        {
-            EndShaderMode();
-        }
+        prayRenderSprite2D(entity);
     }
 }
 
