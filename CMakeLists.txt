@@ -9,13 +9,13 @@ add_subdirectory(libs/common)
 
 include(FetchContent)
 
-FetchContent_Declare(
-	box2d
-	GIT_REPOSITORY https://github.com/erincatto/box2d.git
-	GIT_TAG main
-	GIT_SHALLOW TRUE
-)
-FetchContent_MakeAvailable(box2d)
+# FetchContent_Declare(
+# 	box2d
+# 	GIT_REPOSITORY https://github.com/erincatto/box2d.git
+# 	GIT_TAG main
+# 	GIT_SHALLOW TRUE
+# )
+# FetchContent_MakeAvailable(box2d)
 
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
