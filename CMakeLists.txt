@@ -19,7 +19,6 @@ include(FetchContent)
 
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
-    message(NOTICE "Declare")
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
@@ -50,7 +49,7 @@ file(GLOB SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib common box2d)
+target_link_libraries(${PROJECT_NAME} PUBLIC raylib common)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(CUNIT REQUIRED cunit)
