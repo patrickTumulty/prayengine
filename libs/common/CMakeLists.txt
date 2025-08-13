@@ -15,6 +15,7 @@ set(
     src/array_list.c
     src/common_hash.c
     src/common_random.c
+    src/pointer_map.c
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
@@ -35,6 +36,7 @@ add_executable(${PROJECT_NAME}_test
     tests/boolmat_tests.c
     tests/tmem_tests.c
     tests/utils_tests.c
+    tests/map_tests.c
 )
 
 target_include_directories(${PROJECT_NAME}_test PUBLIC 

@@ -1,21 +1,13 @@
 
-#ifndef PMAP_H
-#define PMAP_H
-
+#ifndef POINTER_MAP_H
+#define POINTER_MAP_H
 
 #include "common_types.h"
 
-// TODO(ptumulty): implement all this stuff
 
 typedef struct {
-    u64 key;
-    void *value;
-} PMapEntry;
-
-typedef struct {
-    float loadFactor;
-    u32 entriesLen;
-    PMapEntry* entries;
+    u32 size;
+    void *internal;
 } PMap;
 
 Rc pmapNew(PMap *pmap);
@@ -25,4 +17,4 @@ void *pmapRemove(PMap *pmap, u32 key);
 Rc pmapClear(PMap *pmap);
 Rc pmapFree(PMap *pmap);
 
-#endif // PMAP_H
+#endif // POINTER_MAP_H

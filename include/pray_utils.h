@@ -6,10 +6,13 @@
 
 #define VEC2_ZERO (Vector2){0, 0}
 
-typedef struct {
+typedef struct
+{
     int x;
     int y;
 } IntVector2;
+
+#define IVEC2(X, Y) ((IntVector2) {.x = (X), .y = (Y)})
 
 Vector2 prayVector2MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta);
 Vector2 prayVector2Add(Vector2 v1, Vector2 v2);
