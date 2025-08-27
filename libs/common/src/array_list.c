@@ -8,6 +8,14 @@
 #include <string.h>
 #include <sys/types.h>
 
+/**
+ * @brief create new array list 
+ *
+ * @param[[in,out]] alist array list 
+ * @param[[in]] length number of elements in the list 
+ * @param[[in]] size size of each list element 
+ * @return RC_OK if successful 
+ */
 Rc alistNew(AList *alist, u32 length, u32 size)
 {
     size_t s = (u64) size * length;

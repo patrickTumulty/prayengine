@@ -299,6 +299,46 @@ void emptyThenAdd()
     CU_ASSERT_EQUAL(rc, RC_OK);
 }
 
+void plistReduceTest(void)
+{
+    TestStruct structs[5] = {0};
+    for (int i = 0; i < 5; i++)
+    {
+        TestStruct *ts = &structs[i];
+        ts->arg1 = 1UL * i;
+        ts->arg2 = 2UL * i;
+        ts->arg3 = 3UL * i;
+        ts->arg4 = 4UL * i;
+        ts->arg5 = 5UL * i;
+    }
+
+    PList plist = {};
+    plistNew(&plist, 6);
+
+    plistSet(&plist, 0, &structs[0]);
+    plistSet(&plist, 1, &structs[1]);
+    plistSet(&plist, 2, nullptr);
+    plistSet(&plist, 3, &structs[2]);
+    plistSet(&plist, 4, nullptr);
+    plistSet(&plist, 5, nullptr);
+
+    CU_ASSERT_EQUAL(plist.length, 6);
+    plistReduce(&plist);
+    CU_ASSERT_EQUAL(plist.length, 3);
+
+    TestStruct *ts0 = plistGet(&plist, 0);
+    CU_ASSERT_PTR_EQUAL(ts0, &structs[0]);
+    TestStruct *ts1 = plistGet(&plist, 1);
+    CU_ASSERT_PTR_EQUAL(ts1, &structs[1]);
+    TestStruct *ts2 = plistGet(&plist, 2);
+    CU_ASSERT_PTR_EQUAL(ts2, &structs[2]);
+
+    plistFree(&plist);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
+}
+
 void registerArrayListTests(void)
 {
     CU_pSuite suite = CU_add_suite("Array List Tests", setup, teardown);
@@ -308,5 +348,6 @@ void registerArrayListTests(void)
     CU_add_test(suite, "Out-of-Bounds test", alistOutOfBoundsTest);
     CU_add_test(suite, "Resize array test", alistResizeTest);
     CU_add_test(suite, "PList test", plistTest);
+    CU_add_test(suite, "PList Reduce test", plistReduceTest);
     CU_add_test(suite, "Empty then append", emptyThenAdd);
 }

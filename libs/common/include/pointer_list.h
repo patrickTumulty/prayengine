@@ -13,5 +13,6 @@ void *plistGet(PList *plist, int index);
 Rc plistSet(PList *plist, int index, const void *ptr);
 u32 plistLength(PList *plist);
 void plistFree(PList *plist);
+Rc plistReduce(PList *plist);
 
 #endif // POINTER_LIST_H

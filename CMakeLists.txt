@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED True) # Optional, but recommended
 
 add_subdirectory(libs/common)
+add_subdirectory(libs/prayevents)
 
 include(FetchContent)
 

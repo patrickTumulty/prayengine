@@ -1,9 +1,7 @@
 
 #include "pointer_map.h"
 #include "common_types.h"
-#include "common_utils.h"
 #include "tmem.h"
-#include <stdio.h>
 
 #define PMAP_CRITICAL_LOAD_FACTOR (0.56f)
 #define PMAP_RESIZE_INCREMENT 5
@@ -188,6 +186,11 @@ void *pmapGet(PMap *pmap, u32 key)
     return entry->value;
 }
 
+bool pmapContains(PMap *pmap, u32 key)
+{
+    return pmapGet(pmap, key) != nullptr;
+}
+
 void *pmapRemove(PMap *pmap, u32 key)
 {
     PMapInternal *internal = getInternal(pmap);
@@ -221,8 +224,28 @@ Rc pmapClear(PMap *pmap)
 
 Rc pmapFree(PMap *pmap)
 {
+    pmap->size = 0;
     PMapInternal *internal = getInternal(pmap);
     tmemfree(internal->entries);
     tmemfree(internal);
+    return RC_OK;
+}
+
+Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen)
+{
+    if (keysArrayLen < pmap->size)
+    {
+        return RC_BAD_PARAM;
+    }
+    PMapInternal *internal = getInternal(pmap);
+    int keyIdx = 0;
+    for (int i = 0; i < internal->entriesLen; i++)
+    {
+        PMapEntry *entry = &internal->entries[i];
+        if (entry->isSet)
+        {
+            keysArray[keyIdx++] = entry->key;
+        }
+    }
     return RC_OK;
 }

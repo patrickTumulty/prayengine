@@ -2,6 +2,7 @@
 #include "common_hash.h"
 #include "common_tests.h"
 #include "common_types.h"
+#include "pointer_list.h"
 #include "pointer_map.h"
 #include "tmem.h"
 #include <CUnit/Basic.h>
@@ -151,7 +152,7 @@ void pmapResizeTest(void)
     }
 
     TestStruct *ts17 = &testStructs[17];
-    u32 ts17Hash = testStructsHashes[17]; 
+    u32 ts17Hash = testStructsHashes[17];
 
     TestStruct *ts17_alt = pmapGet(&pmap, ts17Hash);
     CU_ASSERT_PTR_NOT_NULL(ts17_alt);
@@ -167,10 +168,125 @@ void pmapResizeTest(void)
     CU_ASSERT_EQUAL(stats.current, 0);
 }
 
+u64 getTimestampNanos()
+{
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return (u64) (ts.tv_sec * 1000000000UL) + ts.tv_nsec;
+}
+
+void pmapPerformanceTest(void)
+{
+    PMap pmap = {};
+    Rc rc = pmapNew(&pmap);
+    CU_ASSERT_EQUAL(rc, RC_OK);
+    CU_ASSERT_EQUAL(pmap.size, 0);
+
+    PList plist = {};
+    rc = plistNew(&plist, 100);
+
+    srand(time(nullptr));
+
+    u32 queryList[100] = {0};
+    for (int i = 0; i < 100; i++)
+    {
+        pmapPut(&pmap, testStructsHashes[i], &testStructs[i]);
+        plistSet(&plist, i, &testStructs[i]);
+        queryList[i] = rand() % 100;
+    }
+
+    printf("\nStarting Performance Test:\n");
+
+    u64 t1 = getTimestampNanos();
+
+    for (int i = 0; i < 100; i++)
+    {
+        TestStruct *target = &testStructs[queryList[i]];
+        u32 targetHash = testStructsHashes[queryList[i]];
+        TestStruct *s = pmapGet(&pmap, targetHash);
+        CU_ASSERT_PTR_NOT_NULL_FATAL(s);
+        CU_ASSERT_PTR_EQUAL_FATAL(s, target)
+    }
+
+    u64 t2 = getTimestampNanos();
+    u64 mapTime = t2 - t1;
+
+    t1 = getTimestampNanos();
+
+    for (int i = 0; i < 100; i++)
+    {
+        TestStruct *target = &testStructs[queryList[i]];
+        TestStruct *s = nullptr;
+        for (int j = 0; j < plist.length; j++)
+        {
+            s = plistGet(&plist, j);
+            if (s->id == target->id)
+            {
+                break;
+            }
+        }
+        CU_ASSERT_PTR_NOT_NULL_FATAL(s);
+        CU_ASSERT_PTR_EQUAL_FATAL(s, target)
+    }
+
+    t2 = getTimestampNanos();
+    printf("Map Time   : %lu ns\n", mapTime);
+    printf("Array Time : %lu ns\n", t2 - t1);
+}
+
+
+void pmapGetKeysTest(void)
+{
+    PMap pmap = {0};
+    Rc rc = pmapNew(&pmap);
+    CU_ASSERT_EQUAL(rc, RC_OK);
+    CU_ASSERT_EQUAL(pmap.size, 0);
+
+    u32 hashes[30] = { 0 };
+
+    for (int i = 0; i < 30; i++)
+    {
+        TestStruct *ts = &testStructs[i];
+        u32 tsHash = testStructsHashes[i];
+        hashes[i] = tsHash;
+        rc = pmapPut(&pmap, tsHash, ts);
+        CU_ASSERT_EQUAL_FATAL(rc, RC_OK);
+        CU_ASSERT_EQUAL_FATAL(pmap.size, i + 1);
+    }
+
+    u32 keys[30] = { 0 };
+    rc = pmapGetKeys(&pmap, keys, 30);
+    CU_ASSERT_EQUAL(rc, RC_OK);
+
+    for (int i = 0; i < 30; i++)
+    {
+        for (int j = 0; j < 30; j++)
+        {
+            if (keys[i] == hashes[j])
+            {
+                hashes[j] = 0;
+            }
+        }
+    }
+
+    for (int i = 0; i < 30; i++)
+    {
+        CU_ASSERT_EQUAL_FATAL(hashes[i], 0);
+    }
+
+    rc = pmapFree(&pmap);
+    CU_ASSERT_EQUAL(rc, RC_OK);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
+}
+
 void registerPMapTests(void)
 {
     CU_pSuite suite = CU_add_suite("Pointer Map Tests", setup, teardown);
     CU_add_test(suite, "Adding/Removing Elements", pmapAddingRemoveingElement);
     CU_add_test(suite, "Adding/Removing Duplicate Elements", pmapAddingRemoveingDuplicateElement);
     CU_add_test(suite, "Resize Test", pmapResizeTest);
+    CU_add_test(suite, "Get Keys Test", pmapGetKeysTest);
+    CU_add_test(suite, "Performance Test", pmapPerformanceTest);
 }

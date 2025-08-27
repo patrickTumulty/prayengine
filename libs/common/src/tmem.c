@@ -1,17 +1,18 @@
 
 #include "tmem.h"
 #include <assert.h>
+#include <common_utils.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <threads.h>
-#include <common_utils.h>
 
 static TMemStats stats = {0};
 static mtx_t lock;
 
-typedef struct {
+typedef struct
+{
     uint64_t size;
     uint64_t ptr;
 } TMemMeta;
@@ -52,7 +53,6 @@ static void updateGlobalAllocationStats(uint64_t allocated)
     stats.allocations++;
     mtx_unlock(&lock);
 }
-
 
 static void updateGlobalFreeStats(uint64_t freed)
 {

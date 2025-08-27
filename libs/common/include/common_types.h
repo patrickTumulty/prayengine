@@ -21,6 +21,8 @@ typedef enum
     RC_NOT_ALLOWED = -6,
 } Rc;
 
+#define RETURN_IF_ERROR(RC) if (rc != RC_OK) return rc
+
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
