@@ -217,7 +217,7 @@ void llistTransferBetweeenQueues()
     LList outList = {};
     llistInit(&outList);
 
-    const int LIST_SIZE = 5;
+    const int LIST_SIZE = 2;
 
     NumNode nodes[LIST_SIZE];
     for (int i = 0; i < LIST_SIZE; i++)
@@ -228,20 +228,24 @@ void llistTransferBetweeenQueues()
         llistAppend(&inList, &n->node);
     }
 
-    CU_ASSERT_EQUAL(inList.size, 5);
-    LNode *removed = llistRemove(&inList, &nodes[0].node);
-    CU_ASSERT_PTR_NOT_NULL(removed);
-    CU_ASSERT_EQUAL(inList.size, 4);
-    CU_ASSERT_EQUAL(outList.size, 0);
-    llistAppend(&outList, &nodes[0].node);
-    CU_ASSERT_EQUAL(outList.size, 1);
+    CU_ASSERT_EQUAL(inList.size, 2);
+    LNode *n0 = llistPopFront(&inList);
+    CU_ASSERT_PTR_NOT_NULL(n0);
+    CU_ASSERT_EQUAL(inList.size, 1);
+    CU_ASSERT_PTR_NULL(n0->next);
+    CU_ASSERT_PTR_NULL(n0->prev);
 
-    removed = llistRemove(&inList, &nodes[1].node);
-    CU_ASSERT_PTR_NOT_NULL(removed);
-    CU_ASSERT_EQUAL(inList.size, 3);
+
+    CU_ASSERT_EQUAL(inList.size, 1);
+    LNode *n1 = llistPopFront(&inList);
+    CU_ASSERT_PTR_NOT_NULL(n1);
+    CU_ASSERT_EQUAL(inList.size, 0);
+    CU_ASSERT_PTR_NULL(n1->next);
+    CU_ASSERT_PTR_NULL(n1->prev);
+
+    CU_ASSERT_EQUAL(outList.size, 0);
+    llistAppend(&outList, n0);
     CU_ASSERT_EQUAL(outList.size, 1);
-    llistAppend(&outList, &nodes[1].node);
-    CU_ASSERT_EQUAL(outList.size, 2);
 
     LNode *lnode = nullptr;
     int inListCount = 0;

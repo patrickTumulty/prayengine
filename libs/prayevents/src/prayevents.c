@@ -6,7 +6,6 @@
 #include "pointer_map.h"
 #include "tmem.h"
 #include <inttypes.h>
-#include <stdio.h>
 
 
 typedef struct

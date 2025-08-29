@@ -136,6 +136,8 @@ LNode *llistPopBack(LList *llist)
         llist->tail->next = nullptr;
     }
     llist->size--;
+    tail->next = nullptr;
+    tail->prev = nullptr;
     return tail;
 }
 
@@ -152,5 +154,7 @@ LNode *llistPopFront(LList *llist)
         llist->head->prev = nullptr;
     }
     llist->size--;
+    head->next = nullptr;
+    head->prev = nullptr;
     return head;
 }
