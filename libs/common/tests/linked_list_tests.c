@@ -97,10 +97,15 @@ void llistPushPopTest(void)
     }
 
     llistPushBack(&list, &nodes[1].node);
+    CU_ASSERT_EQUAL(list.size, 1);
     llistPushFront(&list, &nodes[4].node);
+    CU_ASSERT_EQUAL(list.size, 2);
     llistPushBack(&list, &nodes[2].node);
+    CU_ASSERT_EQUAL(list.size, 3);
     llistPushBack(&list, &nodes[8].node);
+    CU_ASSERT_EQUAL(list.size, 4);
     llistPushFront(&list, &nodes[3].node);
+    CU_ASSERT_EQUAL(list.size, 5);
 
     int expected1[] = {3, 4, 1, 2, 8};
     verifyContents(&list, expected1, 5);
@@ -205,6 +210,59 @@ void llistPopBackTillEmpty()
     CU_ASSERT_EQUAL(list.size, 0);
 }
 
+void llistTransferBetweeenQueues()
+{
+    LList inList = {};
+    llistInit(&inList);
+    LList outList = {};
+    llistInit(&outList);
+
+    const int LIST_SIZE = 5;
+
+    NumNode nodes[LIST_SIZE];
+    for (int i = 0; i < LIST_SIZE; i++)
+    {
+        NumNode *n = &nodes[i];
+        n->num = i;
+        llistInitNode(&n->node, n);
+        llistAppend(&inList, &n->node);
+    }
+
+    CU_ASSERT_EQUAL(inList.size, 5);
+    LNode *removed = llistRemove(&inList, &nodes[0].node);
+    CU_ASSERT_PTR_NOT_NULL(removed);
+    CU_ASSERT_EQUAL(inList.size, 4);
+    CU_ASSERT_EQUAL(outList.size, 0);
+    llistAppend(&outList, &nodes[0].node);
+    CU_ASSERT_EQUAL(outList.size, 1);
+
+    removed = llistRemove(&inList, &nodes[1].node);
+    CU_ASSERT_PTR_NOT_NULL(removed);
+    CU_ASSERT_EQUAL(inList.size, 3);
+    CU_ASSERT_EQUAL(outList.size, 1);
+    llistAppend(&outList, &nodes[1].node);
+    CU_ASSERT_EQUAL(outList.size, 2);
+
+    LNode *lnode = nullptr;
+    int inListCount = 0;
+    int inListSize = (int) inList.size;
+    int outListCount = 0;
+    int outListSize = (int) outList.size;
+
+    while ((lnode = llistPopFront(&inList)) != nullptr)
+    {
+        inListCount++;
+    }
+
+    while ((lnode = llistPopFront(&outList)) != nullptr)
+    {
+        outListCount++;
+    }
+
+    CU_ASSERT_EQUAL(inListCount, inListSize);
+    CU_ASSERT_EQUAL(outListCount, outListSize);
+}
+
 void registerLinkedListTests(void)
 {
     CU_pSuite suite = CU_add_suite("Linked List Tests", nullptr, nullptr);
@@ -212,4 +270,5 @@ void registerLinkedListTests(void)
     CU_add_test(suite, "Push/Pop Elements", llistPushPopTest);
     CU_add_test(suite, "Pop Till Front Empty", llistPopFrontTillEmpty);
     CU_add_test(suite, "Pop Till Back Empty", llistPopBackTillEmpty);
+    CU_add_test(suite, "Transfer Between Queues", llistTransferBetweeenQueues);
 }
