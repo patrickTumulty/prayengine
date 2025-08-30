@@ -10,12 +10,16 @@ typedef struct
     int y;
 } Position;
 
-typedef struct {
+typedef struct
+{
     int x;
     int y;
 } Point2;
 
-typedef struct {
+#define point2equals(p1, p2) (((p1).x == (p2).x) && ((p1).y == (p2).y))
+
+typedef struct
+{
     int x;
     int y;
     int z;
@@ -32,7 +36,8 @@ typedef enum
     RC_NOT_ALLOWED = -6,
 } Rc;
 
-#define RETURN_IF_ERROR(RC) if (rc != RC_OK) return rc
+#define RETURN_IF_ERROR(RC) \
+    if (rc != RC_OK) return rc
 
 typedef uint8_t u8;
 typedef uint16_t u16;
