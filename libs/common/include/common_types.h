@@ -10,6 +10,17 @@ typedef struct
     int y;
 } Position;
 
+typedef struct {
+    int x;
+    int y;
+} Point2;
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+} Point3;
+
 typedef enum
 {
     RC_OK = 0,
