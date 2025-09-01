@@ -16,7 +16,8 @@ typedef struct
     int y;
 } Point2;
 
-#define point2equals(p1, p2) (((p1).x == (p2).x) && ((p1).y == (p2).y))
+#define POINT2(X, Y) ((Point2) {.x = (X), .y = (Y)})
+#define POINT2_EQ(P1, P2) (((P1).x == (P2).x) && ((P1).y == (P2).y))
 
 typedef struct
 {
@@ -24,6 +25,9 @@ typedef struct
     int y;
     int z;
 } Point3;
+
+#define POINT3(X, Y, Z) ((Point3) {.x = (X), .y = (Y), .z = (Z)})
+#define PIONT3_EQ(P1, P2) (((P1).x == (P2).x) && ((P1).y == (P2).y) && ((P1).z == (P2).z))
 
 typedef enum
 {

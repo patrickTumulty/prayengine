@@ -6,6 +6,7 @@
 
 DEFINE_TYPE(Transform2D);
 DEFINE_TYPE(Sprite2D);
+DEFINE_TYPE(Shape2D);
 
 void prayRegisterDefaultComponents()
 {
@@ -14,4 +15,7 @@ void prayRegisterDefaultComponents()
 
     REGISTER_TYPE(Sprite2D);
     registerComponent(Sprite2D, nullptr, nullptr);
+
+    REGISTER_TYPE(Shape2D);
+    registerComponent(Shape2D, nullptr, nullptr);
 }

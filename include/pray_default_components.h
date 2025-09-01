@@ -33,7 +33,35 @@ typedef struct Sprite2D
 
 DECLARE_TYPE(Sprite2D);
 
+typedef enum {
+    SHAPE_TYPE_RECTANGLE = 0,
+    SHAPE_TYPE_CIRCLE = 1,
+} ShapeType;
+
+typedef struct {
+    float radius;
+} CircleDescriptor;
+
+typedef struct {
+    float height;
+    float width;
+} RectangleDescriptor;
+
+typedef struct 
+{
+    ShapeType shapeType;
+    Color color;
+    union {
+        CircleDescriptor circle;
+        RectangleDescriptor rectangle;
+    };
+} Shape2D;
+
+DECLARE_TYPE(Shape2D);
+
 void prayRenderSprite2D(Entity *entity);
+void prayRenderShape2D(Entity *entity);
 void prayRegisterDefaultComponents();
 
-#endif // PRAY_COMPONENTS_H
+#endif // P
+// RAY_COMPONENTS_H
