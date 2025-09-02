@@ -13,6 +13,7 @@ typedef struct {
 
 typedef void(*EventHandlerCallback)(Event *event);
 
+void prayEventConsume(Event *event);
 Rc prayEventsInit();
 Rc prayEventsDestroy();
 Rc prayEventsRegisterHandler(u32 eventID, EventHandlerCallback callback);

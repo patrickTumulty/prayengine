@@ -11,6 +11,7 @@
 typedef struct
 {
     LNode lnode;
+    bool consumed;
 } EventInternal;
 
 #define GET_INTERNAL(EVENT) ((EventInternal *) event->internal)
@@ -25,6 +26,18 @@ typedef struct
 
 static PMap eventListenersMap;
 static PMap eventQueueMap;
+
+void prayEventConsume(Event *event)
+{
+    EventInternal *internal = GET_INTERNAL(event);
+    internal->consumed = true;
+}
+
+static bool prayEventIsConsumed(Event *event)
+{
+    EventInternal *internal = GET_INTERNAL(event);
+    return internal->consumed;
+}
 
 Rc prayEventsInit()
 {
@@ -181,6 +194,7 @@ void addEventToFreeList(Event *event)
         return; // Perhaps this pointer was not managed by the event manager
     }
     EventInternal *internal = GET_INTERNAL(event);
+    internal->consumed = false;
     llistRemove(&eventQueueContainer->pendingList, &internal->lnode);
     llistAppend(&eventQueueContainer->freeList, &internal->lnode);
 }
@@ -201,6 +215,10 @@ Rc prayEventsPostEvent(Event *event)
             continue;
         }
         callback(event);
+        if (prayEventIsConsumed(event))
+        {
+            break;
+        }
     }
     addEventToFreeList(event);
     return RC_OK;
