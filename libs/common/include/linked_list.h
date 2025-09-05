@@ -23,6 +23,7 @@ typedef struct {
 
 #define LListGetEntry(NODE, T) ((T *) (NODE)->data)
 
+#define llistStaticInit() { .head = nullptr, .tail = nullptr, .size = 0 }
 void llistInit(LList *llist);
 void llistAppend(LList *llist, LNode *lnode);
 void llistInsert(LList *llist, uint32_t index, LNode *lnode);
