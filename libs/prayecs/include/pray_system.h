@@ -3,7 +3,7 @@
 #define SYSTEM_H
 
 #include "array_list.h"
-#include "pray_utils.h"
+#include "common_utils.h"
 
 typedef struct
 {

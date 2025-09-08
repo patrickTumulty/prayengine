@@ -5,7 +5,6 @@
 #include "common_types.h"
 #include "pray_entity.h"
 #include "linked_list.h"
-#include <raylib.h>
 #include <stdint.h>
 
 void prayEntityRegistryInit();

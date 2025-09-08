@@ -5,7 +5,6 @@
 #include "common_type.h"
 #include "common_types.h"
 #include "linked_list.h"
-#include <raylib.h>
 
 #define C(...) \
     (type_id[]) { __VA_ARGS__ }

@@ -3,7 +3,6 @@
 #include "array_list.h"
 #include "tmem.h"
 #include <pthread.h>
-#include <stdio.h>
 
 void praySystemNoop(void)
 {

@@ -16,6 +16,11 @@
 
 #define VEC2EQ(V1, V2) (((V1).x == (V2).x) && ((V1).y == (V2).y))
 
+typedef void (*Callback)();
+typedef void (*ConsumerCallback)(void *ptr);
+typedef void *(*ProducerCallback)();
+typedef void *(*ProducerConsumerCallback)(void *ptr);
+
 bool feq(float f1, float f2);
 
 void hexdump(uint8_t *buf, uint32_t bufLen);

@@ -4,7 +4,6 @@
 #include "linked_list.h"
 #include "pointer_list.h"
 #include "pray_entity.h"
-#include <raylib.h>
 #include <stdarg.h>
 #include <stdint.h>
 

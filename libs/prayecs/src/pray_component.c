@@ -4,7 +4,6 @@
 #include "common_types.h"
 #include "linked_list.h"
 #include "tmem.h"
-#include <raylib.h>
 
 static LList componentsList;
 

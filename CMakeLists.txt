@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED True) # Optional, but recommended
 
 add_subdirectory(libs/common)
 add_subdirectory(libs/prayevents)
+add_subdirectory(libs/prayecs)
 
 include(FetchContent)
 
@@ -51,7 +52,7 @@ file(GLOB SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PUBLIC raylib common)
+target_link_libraries(${PROJECT_NAME} PUBLIC raylib common prayecs)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(CUNIT REQUIRED cunit)
@@ -67,5 +68,5 @@ target_include_directories(${PROJECT_NAME}_test PUBLIC
     tests
 )
 
-target_link_libraries(${PROJECT_NAME}_test PUBLIC prayengine ${CUNIT_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_test PUBLIC prayengine prayecs ${CUNIT_LIBRARIES})
 

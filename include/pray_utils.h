@@ -4,10 +4,6 @@
 
 #include "raylib.h"
 
-typedef void (*Callback)();
-typedef void (*ConsumerCallback)(void *ptr);
-typedef void *(*ProducerCallback)();
-typedef void *(*ProducerConsumerCallback)(void *ptr);
 
 #define VEC2_ZERO (Vector2){0, 0}
 
