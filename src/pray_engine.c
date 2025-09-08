@@ -97,12 +97,12 @@ void prayEngineStop()
     engineContext.sceneLoopRunning = false;
 }
 
-void prayEngineInit()
+void prayEngineInit(char *windowTitle)
 {
     tMemInit();
     prayEntityRegistryInit();
 
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "In the Name of Science!");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle);
 
     SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_MAXIMIZED);
     SetWindowMinSize(SCREEN_WIDTH, SCREEN_HEIGHT);

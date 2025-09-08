@@ -7,7 +7,7 @@
 void prayEngineLoadScene(Scene *scene, void *sceneParams);
 void prayEngineRun();
 void prayEngineStop();
-void prayEngineInit();
+void prayEngineInit(char *windowTitle);
 void prayEngineDestroy();
 
 #endif // PRAY_ENGINE_H
