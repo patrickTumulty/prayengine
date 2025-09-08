@@ -24,8 +24,8 @@ Rc prayComponentRegister(type_id componentID,
                          u64 componentSize,
                          Consumer initCallback,
                          Consumer deinitCallback);
-void prayComponnentInitialize();
-void prayComponentsDestroy();
+void prayComponentInit();
+void prayComponentDestroy();
 
 #define registerComponent(TYPE, INIT, DEINIT) prayComponentRegister(typeid(TYPE), sizeof(TYPE), INIT, DEINIT);
 

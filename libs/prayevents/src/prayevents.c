@@ -24,8 +24,8 @@ typedef struct
     u32 eventDataSize;
 } EventQueueContainer;
 
-static PMap eventListenersMap;
-static PMap eventQueueMap;
+static PMap eventListenersMap; 
+static PMap eventQueueMap; // TODO(ptumulty): make this just a single linked list. No need to make a map for all events
 
 void prayEventConsume(Event *event)
 {

@@ -102,16 +102,16 @@ static void renderUpdate()
     }
 }
 
-static void registerSprite2DSystem()
+static void registerSprite2DSystem(SystemsContext *context)
 {
     System sprite2dSystem = {
         .name = "Sprite 2D System",
         .renderUpdateWorldSpace = renderUpdate,
     };
-    praySystemsRegister(sprite2dSystem);
+    praySystemsRegister(context, sprite2dSystem);
 }
 
-void prayRegisterDefaultSystems()
+void prayRegisterDefaultSystems(SystemsContext *context)
 {
-    registerSprite2DSystem();
+    registerSprite2DSystem(context);
 }

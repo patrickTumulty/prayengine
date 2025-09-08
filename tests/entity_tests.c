@@ -73,7 +73,7 @@ void createEntityTest()
     entity4 = prayEntityFree(entity4);
     CU_ASSERT_PTR_NULL_FATAL(entity4);
 
-    prayComponentsDestroy();
+    prayComponentDestroy();
     prayEntityRegistryDestroy();
 
     auto stats = tMemGetStats();
@@ -186,7 +186,7 @@ void entityRegistryTest()
     enemyEntity = prayEntityFree(enemyEntity);
     CU_ASSERT_PTR_NULL(enemyEntity);
 
-    prayComponentsDestroy();
+    prayComponentDestroy();
     prayEntityRegistryDestroy();
 
     auto stats = tMemGetStats();
@@ -226,7 +226,7 @@ void entityWithComponentAllocations()
     prayEntityUnregister(worldEntity);
     prayEntityFree(worldEntity);
 
-    prayComponentsDestroy();
+    prayComponentDestroy();
     prayEntityRegistryDestroy();
 
     auto stats = tMemGetStats();

@@ -3,17 +3,50 @@
 #include "pray_camera.h"
 #include "pray_entity_registry.h"
 #include "pray_globals.h"
+#include "pray_scene.h"
 #include "pray_system.h"
 #include "raylib.h"
 #include "tmem.h"
 
-void prayEngineRun()
+typedef struct
 {
-    praySystemsRunStart();
+    Scene *currentScene;
+    void *sceneParams;
+    Scene *nextScene;
+    bool sceneLoopRunning;
+    bool engineLoopRunning;
+    bool engineStopRequested;
+} PrayEngineContext;
 
-    while (!WindowShouldClose())
+static PrayEngineContext engineContext = {};
+
+void prayEngineLoadScene(Scene *scene, void *sceneParams)
+{
+    engineContext.sceneLoopRunning = false;
+    engineContext.nextScene = scene;
+    engineContext.sceneParams = sceneParams;
+}
+
+static void prayEngineRunScene(Scene *scene)
+{
+    if (scene == nullptr)
     {
-        praySystemsRunGameUpdate();
+        return;
+    }
+
+    engineContext.sceneLoopRunning = true;
+
+    scene->callbacks.init(&scene->systemsContext, engineContext.sceneParams);
+
+    scene->callbacks.start(&scene->systemsContext);
+
+    praySystemsRunInit(&scene->systemsContext);
+
+    praySystemsRunStart(&scene->systemsContext);
+
+    while (engineContext.sceneLoopRunning && !WindowShouldClose())
+    {
+        praySystemsRunGameUpdate(&scene->systemsContext);
 
         BeginDrawing();
 
@@ -21,24 +54,52 @@ void prayEngineRun()
 
         BeginMode2D(*prayGetCamera());
 
-        praySystemsRunRenderUpdateWorldSpace();
+        praySystemsRunRenderUpdateWorldSpace(&scene->systemsContext);
 
         EndMode2D();
 
-        praySystemsRunRenderUpdateScreenSpace();
+        praySystemsRunRenderUpdateScreenSpace(&scene->systemsContext);
 
         EndDrawing();
     }
 
-    praySystemsRunStop();
+    praySystemsRunStop(&scene->systemsContext);
+
+    praySystemsRunDestroy(&scene->systemsContext);
+
+    scene->callbacks.stop(&scene->systemsContext);
+
+    scene->callbacks.destroy(&scene->systemsContext);
+}
+
+void prayEngineRun()
+{
+    engineContext.engineLoopRunning = true;
+
+    while (engineContext.engineLoopRunning && !WindowShouldClose())
+    {
+        prayEngineRunScene(engineContext.currentScene);
+
+        if (engineContext.nextScene != nullptr)
+        {
+            engineContext.currentScene = engineContext.nextScene;
+            engineContext.nextScene = nullptr;
+        }
+    }
 
     CloseWindow();
 }
 
-void prayEngineInitialize()
+void prayEngineStop()
+{
+    engineContext.engineStopRequested = true;
+    engineContext.engineLoopRunning = false;
+    engineContext.sceneLoopRunning = false;
+}
+
+void prayEngineInit()
 {
     tMemInit();
-    praySystemsInit();
     prayEntityRegistryInit();
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "In the Name of Science!");
@@ -53,6 +114,5 @@ void prayEngineInitialize()
 void prayEngineDestroy()
 {
     prayEntityRegistryDestroy();
-    praySystemsDestroy();
     tMemDestroy();
 }

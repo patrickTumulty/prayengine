@@ -59,12 +59,12 @@ Rc prayComponentRegister(type_id componentID,
     return RC_OK;
 }
 
-void prayComponnentInitialize()
+void prayComponentInit()
 {
     llistInit(&componentsList);
 }
 
-void prayComponentsDestroy()
+void prayComponentDestroy()
 {
     LNode *node = llistPopFront(&componentsList);
     while (node != nullptr)

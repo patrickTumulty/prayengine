@@ -2,7 +2,6 @@
 #include "test_components.h"
 #include "common_type.h"
 #include "common_types.h"
-#include "linked_list.h"
 #include "pray_component.h"
 #include "tmem.h"
 #include <CUnit/Basic.h>
@@ -45,8 +44,7 @@ void deinitWorld(void *ptr)
 
 void registerTestComponents()
 {
-    prayComponnentInitialize();
-
+    prayComponentInit();
 
     registerComponent(PlayerComponent, initPlayer, nullptr);
     registerComponent(TransformComponent, nullptr, nullptr);
@@ -107,7 +105,7 @@ void registerComponentTest()
     CU_ASSERT_PTR_NOT_NULL(ci.deinitialize);
     CU_ASSERT_PTR_EQUAL(ci.deinitialize, deinitWorld);
 
-    prayComponentsDestroy();
+    prayComponentDestroy();
 
     auto stats = tMemGetStats();
     CU_ASSERT_EQUAL(stats.current, 0);
@@ -154,7 +152,7 @@ void initDeinitComponents()
 
     tmemfree(worldComponent);
 
-    prayComponentsDestroy();
+    prayComponentDestroy();
 
     auto stats = tMemGetStats();
     CU_ASSERT_EQUAL(stats.current, 0);
@@ -167,6 +165,8 @@ static int initTests()
     REGISTER_TYPE(HealthComponent);
     REGISTER_TYPE(WorldComponent);
     REGISTER_TYPE(EnemyComponent);
+
+    return 0;
 }
 
 void registerComponentsTests()

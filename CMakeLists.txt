@@ -46,6 +46,7 @@ file(GLOB SOURCES
     src/pray_entity.c
     src/pray_system.c
     src/pray_utils.c
+    src/pray_scene.c
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
