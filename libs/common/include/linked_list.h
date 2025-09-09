@@ -16,14 +16,13 @@ typedef struct LNode {
 typedef struct {
     LNode *head;
     LNode *tail;
-    uint32_t size;
+    int size;
 } LList;
 
 #define LListForEach(LL, IT) for ((IT) = (LL)->head; (IT) != NULL; (IT) = (IT)->next)  
-
 #define LListGetEntry(NODE, T) ((T *) (NODE)->data)
+#define LListStaticInit() { .head = nullptr, .tail = nullptr, .size = 0 }
 
-#define llistStaticInit() { .head = nullptr, .tail = nullptr, .size = 0 }
 void llistInit(LList *llist);
 void llistAppend(LList *llist, LNode *lnode);
 void llistInsert(LList *llist, uint32_t index, LNode *lnode);

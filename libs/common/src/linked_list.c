@@ -79,7 +79,6 @@ LNode *llistRemove(LList *llist, LNode *lnode)
     return lnode;
 }
 
-
 void llistPushFront(LList *llist, LNode *lnode)
 {
     if (llistContainsNode(llist, lnode))
