@@ -3,6 +3,19 @@
 #include "common_utils.h"
 #include <math.h>
 
+Color prayColorDesaturate(Color color, float desaturate)
+{
+    float r = color.r;
+    float g = color.g;
+    float b = color.b;
+    float gray = (r + g + b) / 3.0f;
+    return (Color) {
+        .r = (u8) ((r * (1 - desaturate)) + (gray * desaturate)),
+        .g = (u8) ((g * (1 - desaturate)) + (gray * desaturate)),
+        .b = (u8) ((b * (1 - desaturate)) + (gray * desaturate)),
+        .a = color.a,
+    };
+}
 
 Vector2 prayVector2MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta)
 {
