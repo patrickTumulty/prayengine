@@ -13,7 +13,8 @@ typedef struct
 } ComponentIDRef;
 
 #define CID_REF_MAP_LEN(REFMAP) sizeof(REFMAP) / sizeof(ComponentIDRef);
-#define CID_REF(CID, PTR) (ComponentIDRef){ (CID), (void**) (PTR)}
+#define CID_REF(CID, PTR) \
+    (ComponentIDRef) { (CID), (void **) (PTR) }
 
 typedef struct
 {
@@ -27,6 +28,7 @@ Entity *prayEntityFree(Entity *entity);
 void *prayEntityGetComponent(Entity *entity, u32 componentID);
 void prayEntityGetComponents(Entity *entity, ComponentIDRef *refMap, u32 refMapLen);
 
-#define getComponent(ENTITY, TYPE) (TYPE*) prayEntityGetComponent((ENTITY), typeid(TYPE))
+#define getComponent(ENTITY, TYPE) (TYPE *) prayEntityGetComponent((ENTITY), typeid(TYPE))
+#define hasComponent(ENTITY, TYPE) (prayEntityGetComponent((ENTITY), typeid(TYPE)) != nullptr)
 
 #endif // ENTITY_H
