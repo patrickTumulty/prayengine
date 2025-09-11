@@ -5,8 +5,11 @@
 #include "raylib.h"
 
 
+#define VEC2(X, Y) ((Vector2) {(X), (Y)})
 #define VEC2_ZERO (Vector2){0, 0}
+#define VEC2_EQ(V1, V2) (((V1).x == (V2).x) && ((V1).y == (V2).y))
 
+// Delete this in th future
 typedef struct
 {
     int x;

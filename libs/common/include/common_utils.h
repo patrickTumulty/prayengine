@@ -14,8 +14,6 @@
 
 #define POSEQ(P1, P2) (((P1).x == (P2).x) && ((P1).y == (P2).y))
 
-#define VEC2EQ(V1, V2) (((V1).x == (V2).x) && ((V1).y == (V2).y))
-
 typedef void (*Callback)();
 typedef void (*ConsumerCallback)(void *ptr);
 typedef void *(*ProducerCallback)();
