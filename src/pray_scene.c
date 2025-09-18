@@ -2,6 +2,7 @@
 #include "pray_scene.h"
 #include "pray_system.h"
 #include "tmem.h"
+#include <stdio.h>
 
 
 static void initSceneNoOpCallback(SystemsContext *context, void *params)
@@ -20,7 +21,7 @@ static void sceneNoOpCallback(SystemsContext *context)
         (VAR) = (DEFAULT);        \
     }
 
-Scene *praySceneNew(SceneCallbacks callbacks)
+Scene *praySceneNew(char *name, SceneCallbacks callbacks)
 {
     Scene *scene = tmemcalloc(1, sizeof(Scene));
     scene->callbacks = callbacks;
@@ -29,6 +30,7 @@ Scene *praySceneNew(SceneCallbacks callbacks)
     SET_IF_NULL(scene->callbacks.stop, sceneNoOpCallback);
     SET_IF_NULL(scene->callbacks.destroy, sceneNoOpCallback);
     praySystemsContextInit(&scene->systemsContext);
+    snprintf(scene->name, sizeof(scene->name), "%s", name);
     return scene;
 }
 

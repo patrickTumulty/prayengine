@@ -10,6 +10,7 @@ set(
     src/linked_list.c
     src/bool_mat.c
     src/common_utils.c
+    src/logging_facade.c
     src/pointer_list.c
     src/tmem.c
     src/array_list.c

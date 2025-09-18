@@ -3,7 +3,6 @@
 #define PRAY_SCENE_H
 
 #include "pray_system.h"
-#include "raylib.h"
 
 typedef void (*InitSceneCallback)(SystemsContext *systemsContext, void *params);
 typedef void (*SceneCallback)(SystemsContext *systemsContext);
@@ -17,11 +16,12 @@ typedef struct {
 
 typedef struct
 {
+    char name[25];
     SceneCallbacks callbacks;
     SystemsContext systemsContext;
 } Scene;
 
-Scene *praySceneNew(SceneCallbacks callbacks);
+Scene *praySceneNew(char *name, SceneCallbacks callbacks);
 void praySceneFree(Scene *scene);
 
 #endif // PRAY_SCENE_H

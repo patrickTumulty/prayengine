@@ -1,5 +1,6 @@
 
 #include "pray_engine.h"
+#include "logging_facade.h"
 #include "pray_camera.h"
 #include "pray_entity_registry.h"
 #include "pray_globals.h"
@@ -7,6 +8,8 @@
 #include "pray_system.h"
 #include "raylib.h"
 #include "tmem.h"
+#include <inttypes.h>
+#include <stdio.h>
 
 typedef struct
 {
@@ -22,6 +25,7 @@ static PrayEngineContext engineContext = {};
 
 void prayEngineLoadScene(Scene *scene, void *sceneParams)
 {
+    lfLogInfo("Loading scene %s : params %p", scene->name, sceneParams);
     engineContext.sceneLoopRunning = false;
     engineContext.nextScene = scene;
     engineContext.sceneParams = sceneParams;
@@ -33,6 +37,8 @@ static void prayEngineRunScene(Scene *scene)
     {
         return;
     }
+
+    lfLogInfo("*** Starting scene %s", scene->name);
 
     engineContext.sceneLoopRunning = true;
 
@@ -70,10 +76,14 @@ static void prayEngineRunScene(Scene *scene)
     scene->callbacks.stop(&scene->systemsContext);
 
     scene->callbacks.destroy(&scene->systemsContext);
+
+    lfLogInfo("*** Exiting scene %s", scene->name);
 }
 
 void prayEngineRun()
 {
+    lfLogInfo("** Pray Engine Starting");
+
     engineContext.engineLoopRunning = true;
 
     while (engineContext.engineLoopRunning && !WindowShouldClose())
@@ -82,12 +92,15 @@ void prayEngineRun()
 
         if (engineContext.nextScene != nullptr)
         {
+            lfLogInfo("Changing to next scene");
             engineContext.currentScene = engineContext.nextScene;
             engineContext.nextScene = nullptr;
         }
     }
 
     CloseWindow();
+
+    lfLogInfo("** Pray Engine Stopped");
 }
 
 void prayEngineStop()
