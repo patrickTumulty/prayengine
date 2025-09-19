@@ -90,3 +90,14 @@ void boolMatSet(BoolMat *boolMat, int x, int y, bool b)
         boolMat->mat[y][col] = new;
     }
 }
+
+void boolMatSetAll(BoolMat *boolMat, bool b)
+{
+    for (int i = 0; i < boolMat->cols; i++)
+    {
+        for (int j = 0; j < boolMat->rows; j++)
+        {
+            boolMatSet(boolMat, j, i, b);
+        }
+    }
+}

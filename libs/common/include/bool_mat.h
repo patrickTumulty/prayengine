@@ -17,5 +17,6 @@ BoolMat *boolMatFree(BoolMat *boolMat);
 BoolMat *boolMatNewCopy(const BoolMat *boolMat);
 bool boolMatGet(const BoolMat *boolMat, int x, int y); 
 void boolMatSet(BoolMat *boolMat, int x, int y, bool b); 
+void boolMatSetAll(BoolMat *boolMat, bool b); 
 
 #endif // BOOL_MAT_H
