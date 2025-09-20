@@ -26,6 +26,7 @@ typedef struct
 } EventQueueContainer;
 
 static PMap eventListenersMap;
+static bool initialized = false;
 static LList freeEvents = LListStaticInit();
 static LList pendingEvents = LListStaticInit();
 // static PMap eventQueueMap; // TODO(ptumulty): make this just a single linked list. No need to make a map for all events
@@ -44,11 +45,16 @@ static bool prayEventIsConsumed(Event *event)
 
 Rc prayEventsInit()
 {
+    if (initialized)
+    {
+        return RC_ALREADY_DONE;
+    }
     Rc rc = pmapNew(&eventListenersMap);
     if (rc != RC_OK)
     {
         return rc;
     }
+    initialized = true;
     return RC_OK;
 }
 
@@ -98,6 +104,8 @@ Rc prayEventsDestroy()
     cleanupListenersMap();
 
     cleanupEventQueues();
+
+    initialized = false;
 
     return RC_OK;
 }
