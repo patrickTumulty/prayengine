@@ -2,6 +2,7 @@
 #include "prayevents.h"
 #include "common_types.h"
 #include "linked_list.h"
+#include "logging_facade.h"
 #include "pointer_list.h"
 #include "pointer_map.h"
 #include "tmem.h"
@@ -24,8 +25,10 @@ typedef struct
     u32 eventDataSize;
 } EventQueueContainer;
 
-static PMap eventListenersMap; 
-static PMap eventQueueMap; // TODO(ptumulty): make this just a single linked list. No need to make a map for all events
+static PMap eventListenersMap;
+static LList freeEvents = LListStaticInit();
+static LList pendingEvents = LListStaticInit();
+// static PMap eventQueueMap; // TODO(ptumulty): make this just a single linked list. No need to make a map for all events
 
 void prayEventConsume(Event *event)
 {
@@ -44,12 +47,6 @@ Rc prayEventsInit()
     Rc rc = pmapNew(&eventListenersMap);
     if (rc != RC_OK)
     {
-        return rc;
-    }
-    rc = pmapNew(&eventQueueMap);
-    if (rc != RC_OK)
-    {
-        pmapFree(&eventListenersMap);
         return rc;
     }
     return RC_OK;
@@ -82,37 +79,18 @@ EXIT:
 
 Rc cleanupEventQueues()
 {
-    Rc rc = RC_OK;
-    u32 *keys = tmemcalloc(1, sizeof(u32) * eventQueueMap.size);
-    if (keys == nullptr)
+    LNode *lnode = nullptr;
+    while ((lnode = llistPopFront(&freeEvents)) != nullptr)
     {
-        return RC_MEM_ALLOC_ERROR;
+        Event *event = lnode->data;
+        tmemfree(event);
     }
-    rc = pmapGetKeys(&eventQueueMap, keys, eventQueueMap.size);
-    if (rc != RC_OK)
+    while ((lnode = llistPopFront(&pendingEvents)) != nullptr)
     {
-        goto EXIT;
+        Event *event = lnode->data;
+        tmemfree(event);
     }
-    for (int i = 0; i < eventQueueMap.size; i++)
-    {
-        EventQueueContainer *eventQueueContainer = pmapGet(&eventQueueMap, keys[i]);
-        LNode *lnode = nullptr;
-        while ((lnode = llistPopFront(&eventQueueContainer->pendingList)) != nullptr)
-        {
-            Event *event = lnode->data;
-            tmemfree(event);
-        }
-        while ((lnode = llistPopFront(&eventQueueContainer->freeList)) != nullptr)
-        {
-            Event *event = lnode->data;
-            tmemfree(event);
-        }
-        tmemfree(eventQueueContainer);
-    }
-    rc = pmapFree(&eventQueueMap);
-EXIT:
-    tmemfree(keys);
-    return rc;
+    return RC_OK;
 }
 
 Rc prayEventsDestroy()
@@ -188,15 +166,14 @@ Rc prayEventsUnregisterHandler(u32 eventID, EventHandlerCallback callback)
 
 void addEventToFreeList(Event *event)
 {
-    EventQueueContainer *eventQueueContainer = pmapGet(&eventQueueMap, event->eventID);
-    if (eventQueueContainer == nullptr)
-    {
-        return; // Perhaps this pointer was not managed by the event manager
-    }
     EventInternal *internal = GET_INTERNAL(event);
     internal->consumed = false;
-    llistRemove(&eventQueueContainer->pendingList, &internal->lnode);
-    llistAppend(&eventQueueContainer->freeList, &internal->lnode);
+    LNode *removed = llistRemove(&pendingEvents, &internal->lnode);
+    if (removed == nullptr)
+    {
+        lfLogWarn("Freeing an event that was not present in the pending list: weird");
+    }
+    llistAppend(&freeEvents, &internal->lnode);
 }
 
 Rc prayEventsPostEvent(Event *event)
@@ -222,20 +199,6 @@ Rc prayEventsPostEvent(Event *event)
     }
     addEventToFreeList(event);
     return RC_OK;
-}
-
-EventQueueContainer *createNewEventQueueContainer(u32 eventID, u32 eventDataSize)
-{
-    EventQueueContainer *eventQueueContainer = tmemcalloc(1, sizeof(EventQueueContainer));
-    if (eventQueueContainer == nullptr)
-    {
-        return nullptr;
-    }
-    eventQueueContainer->eventID = eventID;
-    eventQueueContainer->eventDataSize = eventDataSize;
-    llistInit(&eventQueueContainer->freeList);
-    llistInit(&eventQueueContainer->pendingList);
-    return eventQueueContainer;
 }
 
 Event *createNewEvent(u32 eventID, u32 eventDataSize)
@@ -272,17 +235,20 @@ Event *createNewEvent(u32 eventID, u32 eventDataSize)
  */
 Event *prayEventsGetEvent(u32 eventID, u32 eventDataSize)
 {
-    EventQueueContainer *eventQueueContainer = pmapGet(&eventQueueMap, eventID);
-    if (eventQueueContainer == nullptr)
-    {
-        eventQueueContainer = createNewEventQueueContainer(eventID, eventDataSize);
-        pmapPut(&eventQueueMap, eventID, eventQueueContainer);
-    }
     Event *event = nullptr;
-    LNode *lnode = llistPopFront(&eventQueueContainer->freeList);
+    LNode *lnode = llistPopFront(&freeEvents);
     if (lnode != nullptr)
     {
         event = (Event *) lnode->data;
+        if (event->eventDataLen < eventDataSize)
+        {
+            tmemfree(event);
+            event = createNewEvent(eventID, eventDataSize);
+        }
+        else
+        {
+            event->eventID = eventID;
+        }
     }
     else
     {
@@ -293,6 +259,6 @@ Event *prayEventsGetEvent(u32 eventID, u32 eventDataSize)
         }
     }
     EventInternal *internal = GET_INTERNAL(event);
-    llistAppend(&eventQueueContainer->pendingList, &internal->lnode);
+    llistAppend(&pendingEvents, &internal->lnode);
     return event;
 }

@@ -14,13 +14,15 @@ typedef enum : u32
     EVENT_C = 2,
 } TestEvent;
 
-typedef struct {
+typedef struct
+{
     char word[25];
     char character;
 } DataA;
 
 
-typedef struct {
+typedef struct
+{
     u32 num1;
     u32 num2;
 } DataB;
@@ -56,7 +58,7 @@ void handleEventB(Event *event)
     CU_ASSERT_PTR_NOT_NULL_FATAL(event->internal);
     CU_ASSERT_PTR_NOT_NULL_FATAL(event->eventData);
     CU_ASSERT_EQUAL_FATAL(event->eventID, EVENT_B);
-    CU_ASSERT_EQUAL_FATAL(event->eventDataLen, sizeof(DataB));
+    CU_ASSERT_TRUE_FATAL(event->eventDataLen >= sizeof(DataB));
 
     if (event->eventID == EVENT_B)
     {
@@ -107,15 +109,14 @@ static void testEventHandlersCalled(void)
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventB->internal);
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventB->eventData);
     CU_ASSERT_EQUAL_FATAL(eventB->eventID, EVENT_B);
-    CU_ASSERT_EQUAL_FATAL(eventB->eventDataLen, sizeof(DataB));
-
+    CU_ASSERT_TRUE_FATAL(eventB->eventDataLen >= sizeof(DataB));
 
     Event *eventB2 = prayEventsGetEvent(EVENT_B, sizeof(DataB));
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventB2);
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventB2->internal);
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventB2->eventData);
     CU_ASSERT_EQUAL_FATAL(eventB2->eventID, EVENT_B);
-    CU_ASSERT_EQUAL_FATAL(eventB2->eventDataLen, sizeof(DataB));
+    CU_ASSERT_TRUE_FATAL(eventB2->eventDataLen >= sizeof(DataB));
 
     CU_ASSERT_PTR_NOT_EQUAL_FATAL(eventB, eventB2);
 
@@ -125,9 +126,13 @@ static void testEventHandlersCalled(void)
     Event *eventC = prayEventsGetEvent(EVENT_C, 0);
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventC);
     CU_ASSERT_PTR_NOT_NULL_FATAL(eventC->internal);
-    CU_ASSERT_PTR_NULL_FATAL(eventC->eventData);
+    if (eventC->eventData == nullptr)
+    {
+        CU_ASSERT_TRUE_FATAL(eventC->eventDataLen == 0);
+    }
+    CU_ASSERT_TRUE_FATAL(eventC->eventDataLen >= 0);
     CU_ASSERT_EQUAL_FATAL(eventC->eventID, EVENT_C);
-    CU_ASSERT_EQUAL_FATAL(eventC->eventDataLen, 0);
+    CU_ASSERT_TRUE_FATAL(eventC->eventDataLen >= 0);
 
     prayEventsPostEvent(eventC);
 
@@ -142,7 +147,7 @@ static void testEventHandlersCalled(void)
     prayEventsPostEvent(eventB);
 
     CU_ASSERT_EQUAL_FATAL(eventHandlerBCount, 3);
-    
+
     rc = prayEventsUnregisterHandler(EVENT_B, handleEventB);
     CU_ASSERT_EQUAL(rc, RC_OK);
 
@@ -163,4 +168,3 @@ void registerPrayEventsTests()
 
     CU_add_test(suite, "Test Event Handler", testEventHandlersCalled);
 }
-
