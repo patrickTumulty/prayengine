@@ -64,6 +64,25 @@ float prayVector2Distance(Vector2 p1, Vector2 p2)
 }
 
 /**
+ * @brief calculate slop between vectors 
+ *
+ * @param[[in]] v1 point 1
+ * @param[[in]] v2 point 2 
+ *
+ * @return slope
+ */
+float prayVector2CalcSlope(Vector2 v1, Vector2 v2)
+{
+    float rise = v2.y - v1.y;
+    float run = v2.x - v1.x;
+    if (run == 0)
+    {
+        return INFINITY;
+    }
+    return rise / run;
+}
+
+/**
  * @brief calculate points for an equal lateral triangle 
  *
  * @param[[in]] origin center point 

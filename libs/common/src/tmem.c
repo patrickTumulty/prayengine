@@ -86,6 +86,10 @@ void *tMemMalloc(uint64_t size)
 
 void tMemFree(void *ptr)
 {
+    if (ptr == nullptr)
+    {
+        return;
+    }
     uint8_t *mem = (uint8_t *) ptr;
     mem -= sizeof(TMemMeta);
     TMemMeta *meta = (TMemMeta *) mem;

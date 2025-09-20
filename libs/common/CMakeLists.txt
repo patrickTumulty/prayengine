@@ -15,6 +15,7 @@ set(
     src/tmem.c
     src/array_list.c
     src/common_hash.c
+    src/common_time.c
     src/common_random.c
     src/pointer_map.c
 )
