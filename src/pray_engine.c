@@ -112,7 +112,6 @@ void prayEngineStop()
 
 void prayEngineInit(char *windowTitle)
 {
-    tMemInit();
     prayEntityRegistryInit();
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle);
@@ -127,5 +126,4 @@ void prayEngineInit(char *windowTitle)
 void prayEngineDestroy()
 {
     prayEntityRegistryDestroy();
-    tMemDestroy();
 }
