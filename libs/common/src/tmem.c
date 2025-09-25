@@ -93,7 +93,7 @@ void tMemFree(void *ptr)
     uint8_t *mem = (uint8_t *) ptr;
     mem -= sizeof(TMemMeta);
     TMemMeta *meta = (TMemMeta *) mem;
-    assert(meta->ptr == (uint64_t) ptr);
+    assert(meta->ptr == (uint64_t) ptr); // Tried to free a pointer that wasn't allocated with tmem
     updateGlobalFreeStats(meta->size);
     free(mem);
 }

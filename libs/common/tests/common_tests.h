@@ -10,5 +10,6 @@ void registerBoolMatTests(void);
 void registerTMemTests(void);
 void registerUtilsTests(void);
 void registerPMapTests(void);
+void registerMemoryBlockManagerTests(void);
 
 #endif

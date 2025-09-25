@@ -7,21 +7,23 @@
 
 struct LNode;
 
-typedef struct LNode {
+typedef struct LNode
+{
     void *data;
     struct LNode *next;
     struct LNode *prev;
 } LNode;
 
-typedef struct {
+typedef struct
+{
     LNode *head;
     LNode *tail;
     int size;
 } LList;
 
-#define LListForEach(LL, IT) for ((IT) = (LL)->head; (IT) != NULL; (IT) = (IT)->next)  
+#define LListForEach(LL, IT) for ((IT) = (LL)->head; (IT) != NULL; (IT) = (IT)->next)
 #define LListGetEntry(NODE, T) ((T *) (NODE)->data)
-#define LListStaticInit() { .head = nullptr, .tail = nullptr, .size = 0 }
+#define LListStaticInit() ((LList) {.head = nullptr, .tail = nullptr, .size = 0})
 
 void llistInit(LList *llist);
 void llistAppend(LList *llist, LNode *lnode);

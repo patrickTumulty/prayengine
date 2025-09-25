@@ -16,6 +16,7 @@ set(
     src/array_list.c
     src/common_hash.c
     src/common_time.c
+    src/memory_block_manager.c
     src/common_random.c
     src/pointer_map.c
 )
@@ -36,6 +37,7 @@ add_executable(${PROJECT_NAME}_test
     tests/linked_list_tests.c
     tests/array_list_tests.c
     tests/boolmat_tests.c
+    tests/memory_block_manager_tests.c
     tests/tmem_tests.c
     tests/utils_tests.c
     tests/map_tests.c
