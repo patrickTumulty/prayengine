@@ -33,6 +33,7 @@ void memoryBlockManagerInitZeroBlocksTest(void)
 void memoryBlockManagerGetPtrTest(void)
 {
     MemoryBlockManager manager;
+
     Rc result = memoryBlockManagerInit(&manager, 64, 2);
     CU_ASSERT_EQUAL(result, RC_OK);
 

@@ -9,22 +9,23 @@ static constexpr u32 MEM_BLOCK_MAGIC_NUMBER = 0xDEADCAFE;
 
 typedef struct
 {
-    u32 magic;
-    u32 blockSize;
-    void *data;
-    LNode node;
-} MemoryBlock;
-
-typedef struct
-{
     LList activeMemoryBlocks;
     LList freeMemoryBlocks;
     u32 blockSize;
 } MemoryBlockManagerInternal;
 
-static MemoryBlock *memoryBlockAllocateNewBlock(u32 blockSize)
+typedef struct
 {
-    void *ptr = tmemcalloc(1, sizeof(MemoryBlock) + blockSize);
+    u32 magic;
+    MemoryBlockManagerInternal *internal;
+    void *data;
+    LNode node;
+} MemoryBlock;
+
+
+static MemoryBlock *memoryBlockAllocateNewBlock(MemoryBlockManagerInternal *internal)
+{
+    void *ptr = tmemcalloc(1, sizeof(MemoryBlock) + internal->blockSize);
     if (ptr == nullptr)
     {
         return nullptr;
@@ -36,7 +37,7 @@ static MemoryBlock *memoryBlockAllocateNewBlock(u32 blockSize)
     ptr += sizeof(MemoryBlock);
 
     memoryBlock->magic = MEM_BLOCK_MAGIC_NUMBER;
-    memoryBlock->blockSize = blockSize;
+    memoryBlock->internal = internal;
     memoryBlock->data = ptr;
 
     return memoryBlock;
@@ -56,7 +57,7 @@ Rc memoryBlockManagerInit(MemoryBlockManager *manager, u32 blockSize, u32 initia
 
     for (int i = 0; i < initialBlockCount; i++)
     {
-        MemoryBlock *memoryBlock = memoryBlockAllocateNewBlock(internal->blockSize);
+        MemoryBlock *memoryBlock = memoryBlockAllocateNewBlock(internal);
         if (memoryBlock == nullptr)
         {
             continue;
@@ -115,7 +116,7 @@ void *memoryBlockManagerGetPtr(MemoryBlockManager *manager)
     LNode *node = llistPopFront(&internal->freeMemoryBlocks);
     if (node == nullptr)
     {
-        memoryBlock = memoryBlockAllocateNewBlock(internal->blockSize);
+        memoryBlock = memoryBlockAllocateNewBlock(internal);
         if (memoryBlock == nullptr)
         {
             return nullptr;
@@ -139,13 +140,10 @@ Rc memoryBlockManagerReleasePtr(MemoryBlockManager *manager, void *ptr)
     }
 
     MemoryBlockManagerInternal *internal = manager->internal;
-
-    void *memoryBlockPtr = ptr - sizeof(MemoryBlock);
-    u32 *magic = (u32 *) memoryBlockPtr;
-    u32 *blockSize = (u32 *) (memoryBlockPtr + sizeof(u32));
-    assert(*magic == MEM_BLOCK_MAGIC_NUMBER && *blockSize == internal->blockSize);
-
-    MemoryBlock *memoryBlock = memoryBlockPtr;
+    MemoryBlock *memoryBlock = ptr - sizeof(MemoryBlock);
+    bool magicIsValid = memoryBlock->magic == MEM_BLOCK_MAGIC_NUMBER;
+    bool blockBelongsToManager = memoryBlock->internal == internal;
+    assert(magicIsValid && blockBelongsToManager);
 
     LNode *node = llistRemove(&internal->activeMemoryBlocks, &memoryBlock->node);
     assert(node != nullptr); // Something is up, this block wasn't active
