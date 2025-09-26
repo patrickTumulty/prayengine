@@ -17,6 +17,6 @@ void *pmapRemove(PMap *pmap, u32 key);
 bool pmapContains(PMap *pmap, u32 key);
 Rc pmapClear(PMap *pmap);
 Rc pmapFree(PMap *pmap);
-Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen);
+Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen, u32 *totalKeys);
 
 #endif // POINTER_MAP_H

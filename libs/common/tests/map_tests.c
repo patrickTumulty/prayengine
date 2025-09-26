@@ -255,8 +255,10 @@ void pmapGetKeysTest(void)
     }
 
     u32 keys[30] = { 0 };
-    rc = pmapGetKeys(&pmap, keys, 30);
+    u32 keysCount = 0;
+    rc = pmapGetKeys(&pmap, keys, 30, &keysCount);
     CU_ASSERT_EQUAL(rc, RC_OK);
+    CU_ASSERT_EQUAL(keysCount, 30);
 
     for (int i = 0; i < 30; i++)
     {

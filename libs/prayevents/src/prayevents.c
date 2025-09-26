@@ -29,7 +29,6 @@ static PMap eventListenersMap;
 static bool initialized = false;
 static LList freeEvents = LListStaticInit();
 static LList pendingEvents = LListStaticInit();
-// static PMap eventQueueMap; // TODO(ptumulty): make this just a single linked list. No need to make a map for all events
 
 void prayEventConsume(Event *event)
 {
@@ -66,12 +65,13 @@ Rc cleanupListenersMap()
     {
         return RC_MEM_ALLOC_ERROR;
     }
-    rc = pmapGetKeys(&eventListenersMap, keys, eventListenersMap.size);
+    u32 keysCount = 0;
+    rc = pmapGetKeys(&eventListenersMap, keys, eventListenersMap.size, &keysCount);
     if (rc != RC_OK)
     {
         goto EXIT;
     }
-    for (int i = 0; i < eventListenersMap.size; i++)
+    for (int i = 0; i < keysCount; i++)
     {
         PList *listenersList = pmapGet(&eventListenersMap, keys[i]);
         plistFree(listenersList);

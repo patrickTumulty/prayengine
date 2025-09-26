@@ -231,7 +231,7 @@ Rc pmapFree(PMap *pmap)
     return RC_OK;
 }
 
-Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen)
+Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen, u32 *totalKeys)
 {
     if (keysArrayLen < pmap->size)
     {
@@ -246,6 +246,11 @@ Rc pmapGetKeys(PMap *pmap, u32 *keysArray, u32 keysArrayLen)
         {
             keysArray[keyIdx++] = entry->key;
         }
+        if (keyIdx == keysArrayLen)
+        {
+            break;
+        }
     }
+    *totalKeys = keyIdx;
     return RC_OK;
 }
