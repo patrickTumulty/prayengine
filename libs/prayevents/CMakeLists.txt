@@ -5,7 +5,7 @@ project(prayevents VERSION 0.1.0)
 
 include_directories(include)
 
-file(GLOB SOURCES src/prayevents.c)
+file(GLOB SOURCES src/prayevents.c src/praytimer.c)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 

@@ -1,6 +1,7 @@
 
 #include "pray_utils.h"
 #include "common_utils.h"
+#include "raylib.h"
 #include <math.h>
 
 Color prayColorDesaturate(Color color, float desaturate)
@@ -46,6 +47,15 @@ Vector2 prayVector2Add(Vector2 v1, Vector2 v2)
 bool prayVector2Equals(Vector2 v1, Vector2 v2)
 {
     return feq(v1.x, v2.x) && feq(v1.y, v2.y);
+}
+
+
+Vector2 prayVector2CalcMidPoint(Vector2 p1, Vector2 p2)
+{
+    return (Vector2) {
+        .x = p1.x + ((p2.x - p1.x) * 0.5f),
+        .y = p1.y + ((p2.y - p1.y) * 0.5f),
+    };
 }
 
 /**

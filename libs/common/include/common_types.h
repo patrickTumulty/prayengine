@@ -39,6 +39,7 @@ typedef enum
     RC_NOT_FOUND = -5,
     RC_NOT_ALLOWED = -6,
     RC_ALREADY_DONE = -7,
+    RC_STILL_IN_USE = -8,
 } Rc;
 
 #define RETURN_IF_ERROR(RC) \

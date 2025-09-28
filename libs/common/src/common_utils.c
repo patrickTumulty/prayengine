@@ -46,7 +46,9 @@ const char *rc2str(Rc rc)
         case RC_BAD_PARAM: return "BAD_PARAM";
         case RC_OUT_OF_BOUNDS: return "OUT_OF_BOUNDS";
         case RC_NOT_FOUND: return "NOT_FOUND";
-        default: return "UNKNOWN";
+        case RC_NOT_ALLOWED: return "NOT_ALLOWED";
+        case RC_ALREADY_DONE: return "ALREADY_DONE";
+        case RC_STILL_IN_USE: return "STILL_IN_USE";
     }
 }
 

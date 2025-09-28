@@ -116,7 +116,9 @@ void prayEngineInit(char *windowTitle)
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle);
 
-    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_MAXIMIZED);
+    u32 flags = FLAG_WINDOW_RESIZABLE;
+    // flags |= FLAG_WINDOW_MAXIMIZED;
+    SetWindowState(flags);
     SetWindowMinSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     // SetExitKey(KEY_NULL);
 
