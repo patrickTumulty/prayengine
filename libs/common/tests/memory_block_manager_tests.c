@@ -1,9 +1,20 @@
 #include "common_tests.h"
 #include "common_types.h"
 #include "memory_block_manager.h"
+#include "tmem.h"
 #include <CUnit/Basic.h>
 #include <CUnit/CUnit.h>
 #include <stdint.h>
+
+static int setup(void)
+{
+    tMemInit();
+}
+
+static int teardown(void)
+{
+    tMemDestroy();
+}
 
 void memoryBlockManagerInitTest(void)
 {
@@ -16,6 +27,9 @@ void memoryBlockManagerInitTest(void)
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
     CU_ASSERT_PTR_NULL(manager.internal);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerInitZeroBlocksTest(void)
@@ -28,6 +42,9 @@ void memoryBlockManagerInitZeroBlocksTest(void)
 
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerGetPtrTest(void)
@@ -58,6 +75,9 @@ void memoryBlockManagerGetPtrTest(void)
 
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerGetPtrNullManagerTest(void)
@@ -87,6 +107,9 @@ void memoryBlockManagerReleasePtrTest(void)
 
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerReleasePtrBadParamsTest(void)
@@ -103,6 +126,9 @@ void memoryBlockManagerReleasePtrBadParamsTest(void)
 
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
+    
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerDestroyTest(void)
@@ -114,6 +140,9 @@ void memoryBlockManagerDestroyTest(void)
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
     CU_ASSERT_PTR_NULL(manager.internal);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerDestroyNullTest(void)
@@ -137,6 +166,9 @@ void memoryBlockManagerDestroyWithActiveBlocksTest(void)
     result = memoryBlockManagerDestroy(&manager, true);
     CU_ASSERT_EQUAL(result, RC_OK);
     CU_ASSERT_PTR_NULL(manager.internal);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void memoryBlockManagerMultipleAllocReleaseTest(void)
@@ -161,13 +193,16 @@ void memoryBlockManagerMultipleAllocReleaseTest(void)
 
     result = memoryBlockManagerDestroy(&manager, false);
     CU_ASSERT_EQUAL(result, RC_OK);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void registerMemoryBlockManagerTests(void)
 {
     CU_pSuite pSuite = nullptr;
 
-    pSuite = CU_add_suite("Memory Block Manager Tests", nullptr, nullptr);
+    pSuite = CU_add_suite("Memory Block Manager Tests", setup, teardown);
     if (nullptr == pSuite)
     {
         CU_cleanup_registry();

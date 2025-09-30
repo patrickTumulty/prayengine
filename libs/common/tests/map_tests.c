@@ -33,7 +33,6 @@ static int setup(void)
         testStructsHashes[i] = hashFNV_1A_32((u8 *) ts->str, strlen(ts->str));
     }
 
-
     return 0;
 }
 
@@ -232,6 +231,12 @@ void pmapPerformanceTest(void)
     t2 = getTimestampNanos();
     printf("Map Time   : %lu ns\n", mapTime);
     printf("Array Time : %lu ns\n", t2 - t1);
+
+    plistFree(&plist);
+    pmapFree(&pmap);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 

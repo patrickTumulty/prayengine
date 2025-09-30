@@ -1,10 +1,11 @@
 
 #include "common_utils.h"
+#include "tmem.h"
+#include <float.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <float.h>
 
 void hexdump(uint8_t *buf, uint32_t bufLen)
 {
@@ -52,8 +53,28 @@ const char *rc2str(Rc rc)
     }
 }
 
-
 bool feq(float f1, float f2)
 {
     return fabs(f1 - f2) < FLT_EPSILON;
+}
+
+void *allocateMatrix(int height, int width, int cellSize)
+{
+    u32 totalBytes = cellSize * ((u64) width * height);
+    totalBytes += height * sizeof(void *);
+
+    u8 *data = tmemcalloc(1, totalBytes);
+    if (data == nullptr)
+    {
+        return nullptr;
+    }
+
+    u8 **mat = (u8 **) data;
+    u8 *cells = data + (sizeof(void *) * height);
+    for (u64 i = 0; i < height; i++)
+    {
+        mat[i] = &cells[i * width * cellSize];
+    }
+
+    return (void *) mat;
 }

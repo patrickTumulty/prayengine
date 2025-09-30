@@ -2,7 +2,6 @@
 #include "pointer_list.h"
 #include "array_list.h"
 #include "common_types.h"
-#include <stdio.h>
 
 
 Rc plistNew(PList *plist, u32 length)
@@ -19,6 +18,11 @@ Rc plistAppend(PList *plist, const void *ptr)
 Rc plistResize(PList *plist, u32 length)
 {
     return alistResize(plist, length);
+}
+
+Rc plistClear(PList *plist)
+{
+    return alistClear(plist);
 }
 
 void *plistGet(PList *plist, int index)

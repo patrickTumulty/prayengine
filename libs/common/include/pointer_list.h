@@ -9,6 +9,7 @@ typedef AList PList;
 Rc plistNew(PList *plist, u32 length);
 Rc plistAppend(PList *plist, const void *ptr);
 Rc plistResize(PList *plist, u32 length);
+Rc plistClear(PList *plist);
 void *plistGet(PList *plist, int index);
 Rc plistSet(PList *plist, int index, const void *ptr);
 u32 plistLength(PList *plist);

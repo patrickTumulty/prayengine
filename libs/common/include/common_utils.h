@@ -27,5 +27,6 @@ bool inBounds(int v, int min, int max);
 
 const char *rc2str(Rc rc);
 
+void *allocateMatrix(int height, int width, int cellSize);
 
 #endif // UTILS_H

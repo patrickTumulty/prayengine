@@ -297,6 +297,11 @@ void emptyThenAdd()
     u64 number = 10;
     rc = alistAppend(&alist, &number);
     CU_ASSERT_EQUAL(rc, RC_OK);
+
+    alistFree(&alist);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
 }
 
 void plistReduceTest(void)

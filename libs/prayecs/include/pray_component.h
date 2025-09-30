@@ -6,6 +6,9 @@
 #include "common_types.h"
 #include "linked_list.h"
 
+/*
+ * Simple macro for inline definition of typeids 
+ */
 #define C(...) \
     (type_id[]) { __VA_ARGS__ }
 
