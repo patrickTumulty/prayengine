@@ -7,6 +7,47 @@
 #include <float.h>
 #include <stdint.h>
 
+typedef struct {
+    int i;
+    int j;
+    int product;
+} TestStruct;
+
+void commonUtilsStructMatrixAllocateTest(void)
+{
+    int height = 10;
+    int width = 20;
+
+    TestStruct**mat = (TestStruct**) allocateMatrix(height, width, sizeof(TestStruct));
+    CU_ASSERT_PTR_NOT_NULL_FATAL(mat);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            TestStruct *ts = &mat[i][j];
+            ts->i = i;
+            ts->j = j;
+            ts->product = i * j;
+        }
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            TestStruct *ts = &mat[i][j];
+            CU_ASSERT_PTR_EQUAL_FATAL(ts->i, i);
+            CU_ASSERT_PTR_EQUAL_FATAL(ts->j, j);
+            CU_ASSERT_PTR_EQUAL_FATAL(ts->product, i * j);
+        }
+    }
+
+    tmemfree((void *) mat);
+
+    auto stats = tMemGetStats();
+    CU_ASSERT_EQUAL(stats.current, 0);
+}
 
 void commonUtilsMatrixAllocateTest(void)
 {
@@ -20,7 +61,7 @@ void commonUtilsMatrixAllocateTest(void)
     {
         for (int j = 0; j < width; j++)
         {
-            mat[i][j] = i * j; 
+            mat[i][j] = i * j;
         }
     }
 
@@ -49,7 +90,8 @@ void registerUtilsTests(void)
         return;
     }
 
-    if (nullptr == CU_add_test(pSuite, "Matrix Allocate Test", commonUtilsMatrixAllocateTest))
+    if (nullptr == CU_add_test(pSuite, "Matrix Allocate Test (int)", commonUtilsMatrixAllocateTest) ||
+        nullptr == CU_add_test(pSuite, "Matrix Allocate Test (struct)", commonUtilsStructMatrixAllocateTest))
     {
         CU_cleanup_registry();
         return;
