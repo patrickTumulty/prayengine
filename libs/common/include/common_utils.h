@@ -7,12 +7,9 @@
 #include <stdint.h>
 
 #define MIN(V1, V2) ((V1) < (V2) ? (V1) : (V2))
-
 #define MAX(V1, V2) ((V1) > (V2) ? (V1) : (V2))
-
 #define CLAMP(VAL, MIN_VAL, MAX_VAL) (MIN((MAX_VAL), MAX((MIN_VAL), (VAL))))
-
-#define POSEQ(P1, P2) (((P1).x == (P2).x) && ((P1).y == (P2).y))
+#define BOOL2STR(B) ((B) ? "True" : "False")
 
 typedef void (*Callback)();
 typedef void (*ConsumerCallback)(void *ptr);
